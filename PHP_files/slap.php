@@ -6,8 +6,8 @@
 		<meta id="meta" name="viewport" content="width=device-width, initial-scale=1.0">
 		<style>
 			body{
-				background-image:url(http://mygaming.co.za/news/wp-content/uploads/2012/08/batman-slap-header.jpg); 
-				background-size:auto 100%;
+				background-image:url(http://25.media.tumblr.com/tumblr_m48hmjMuAD1rtir38o1_250.jpg); 
+				background-size: auto 100%;
 				background-repeat: no-repeat;
 				background-position:center;
 				width:100%; 
@@ -22,13 +22,16 @@
 				float:left;
 				position:relative;
 				text-align: center;
-				font-size:6em;
+				font-size:100%;				
+				font-weight: bolder;
 				color:#f2f2f2;	
-				text-shadow: 2px 2px 4px #000000;
+				text-shadow: -5px -5px 1px #000000, 5px 5px 1px #000000;
 			}
 			.topMsg{
 				position:absolute;
-				top:40%;
+				/*top:40%;*/
+				font-size:100%;
+				height: 100%;
 				text-align: center;
 				width:100%;
 			}
@@ -37,6 +40,7 @@
 				top:40%;
 				text-align: center;
 				width:100%;
+				font-size:500%;
 			}
 		</style>
 	</head>

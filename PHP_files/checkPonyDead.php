@@ -22,10 +22,23 @@
         echo $distance;
         if($distance < 10){ //10 meters
             mono_query("UPDATE KHGame SET dead = 1 WHERE username LIKE '".$check_user."'",$result,1);
-            header("https://api.justyo.co/yoall/api_token=c6537cd9-5fb8-41a7-be7b-03535363fdc0&link=http://elendow.com/KairosHacks2015/slap.php?username=".$check_user);
+            $url = 'https://api.justyo.co/yoall/';
+            $data = array('api_token' => 'c6537cd9-5fb8-41a7-be7b-03535363fdc0', 'link' => 'http://elendow.com/KairosHacks2015/slap.php?username='.$check_user);
+
+            $options = array(
+                'http' => array(
+                    'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+                    'method'  => 'POST',
+                    'content' => http_build_query($data),
+                ),
+            );
+            $context  = stream_context_create($options);
+            $result = file_get_contents($url, false, $context);
+            //header("https://api.justyo.co/yoall/api_token=c6537cd9-5fb8-41a7-be7b-03535363fdc0&link=http://elendow.com/KairosHacks2015/slap.php?username=".$check_user);
         } 
 
         mono_query("SELECT username FROM KHGame WHERE dead = 0 ORDER BY username",$people_playing,0);
+
         if(count($people_playing)==1){ //end of the game
             header("https://api.justyo.co/yoall/api_token=c6537cd9-5fb8-41a7-be7b-03535363fdc0&link=http://elendow.com/KairosHacks2015/slap.php?username=".$check_user);
             //mono_query("DELETE FROM KHGame",$result,1);
