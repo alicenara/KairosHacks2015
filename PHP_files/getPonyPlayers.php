@@ -5,6 +5,6 @@
     
     for($i=0;$i<count($people_playing);$i++){
         echo ($people_playing[$i]['username']);
-        if($i<count($people_playing)) echo(";");
+        if($i<count($people_playing)-1) echo(";");
     }
 ?>
