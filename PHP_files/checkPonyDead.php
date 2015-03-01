@@ -2,6 +2,7 @@
     require_once("../includes/config.php");
 
     $lat = $_GET['link']; //link=username;lat;long
+    $lat = str_replace ("http://www.web.com?","",$lat);
     $lat = explode(";",$lat);
     $username = $lat[0];
     $check_user = $lat[3];
@@ -27,7 +28,7 @@
         mono_query("SELECT username FROM KHGame WHERE dead = 0 ORDER BY username",$people_playing,0);
         if(count($people_playing)==1){ //end of the game
             header("https://api.justyo.co/yoall/api_token=c6537cd9-5fb8-41a7-be7b-03535363fdc0&link=http://elendow.com/KairosHacks2015/slap.php?username=".$check_user);
-            mono_query("DELETE FROM KHGame",$result,1);
+            //mono_query("DELETE FROM KHGame",$result,1);
         }
     }
 
