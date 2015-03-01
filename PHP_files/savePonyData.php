@@ -1,5 +1,5 @@
 <?php
-    require_once("includes/config.php");
+    require_once("../includes/config.php");
 
     $username = $_GET['username'];
     $lat = $_GET['location'];
