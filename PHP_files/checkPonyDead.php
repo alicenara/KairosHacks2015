@@ -1,10 +1,10 @@
 <?php
     require_once("../includes/config.php");
 
-    $username = $_GET['username'];
-    $lat = $_GET['link'];
+    $lat = $_GET['link']; //link=username;lat;long
     $lat = explode(";",$lat);
-    $check_user = $lat[0];
+    $username = $lat[0];
+    $check_user = $lat[3];
     $long = $lat[2];
     $lat = $lat[1];
 
@@ -19,21 +19,28 @@
     if($trying_to_kill[0]['dead']==0){
         $distance = distanceBetweenPeople($trying_to_kill[0]['lat'], $trying_to_kill[0]['lng'], $lat, $long);
         echo $distance;
-        /*if($distance < 5){ //5 meters
+        if($distance < 10){ //10 meters
             mono_query("UPDATE KHGame SET dead = 1 WHERE username LIKE '".$check_user."'",$result,1);
-            //enviar yo
+            header("https://api.justyo.co/yoall/api_token=c6537cd9-5fb8-41a7-be7b-03535363fdc0&link=http://elendow.com/KairosHacks2015/slap.php?username=".$check_user);
+        } 
 
-        } */
+        mono_query("SELECT username FROM KHGame WHERE dead = 0 ORDER BY username",$people_playing,0);
+        if(count($people_playing)==1){ //end of the game
+            header("https://api.justyo.co/yoall/api_token=c6537cd9-5fb8-41a7-be7b-03535363fdc0&link=http://elendow.com/KairosHacks2015/slap.php?username=".$check_user);
+            mono_query("DELETE FROM KHGame",$result,1);
+        }
     }
 
-    private function distanceBetweenPeople($lat1, $lon1, $lat2, $lon2){ 
-        $R = 6378.137; // Radius of earth in KM
-        $dLat = ($lat2 - $lat1) * M_PI / 180;
-        $dLon = ($lon2 - $lon1) * M_PI / 180;
-        $calc = sin($dLat/2) * sin($dLat/2) + cos($lat1 * M_PI / 180) * cos($lat2 * M_PI / 180) * sin($dLon/2) * sin($dLon/2);
+    function distanceBetweenPeople($lat1, $lon1, $lat2, $lon2){ 
+        $R = 63781370; // Radius of earth in m
+        $dLat = deg2rad ($lat2 - $lat1);
+        $dLon = deg2rad ($lon2 - $lon1);
+        $lat1 = deg2rad ($lat1);
+        $lat2 = deg2rad ($lat2);
+        $lon1 = deg2rad ($lon1);
+        $lon2 = deg2rad ($lon2);
+        $calc = sin($dLat/2) * sin($dLat/2) + cos($lat1) * cos($lat2) * sin($dLon/2) * sin($dLon/2);
         $calc2 = 2 * atan2(sqrt($calc), sqrt(1-$calc));
-        $result = $R * $calc2;
-        return $result * 1000; // meters
+        return ($R * $calc2)/100; // meters
     }
-}
 ?>

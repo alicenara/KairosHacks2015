@@ -1,11 +1,11 @@
 <?php
     require_once("../includes/config.php");
 
-    $username = $_GET['username'];
-    $lat = $_GET['location'];
+    $lat = $_GET['link'];
     $lat = explode(";",$lat);
-    $long = $lat[1];
-    $lat = $lat[0];
+    $username = $lat[0];
+    $long = $lat[2];
+    $lat = $lat[1];
 
     //check if there is this player in the bd
     mono_query("SELECT * FROM KHGame WHERE username LIKE '".$username."'", $people_playing,1);
