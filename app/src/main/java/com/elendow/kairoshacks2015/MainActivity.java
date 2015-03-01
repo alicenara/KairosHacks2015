@@ -1,7 +1,6 @@
 package com.elendow.kairoshacks2015;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -48,18 +47,19 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        playerName = DataStorage.UserName;
+
         StartHandler();
 
-        btnYo       = (Button)findViewById(R.id.btnYo);
+        btnYo       = (Button)findViewById(R.id.btnPlay);
         lstPlayers  = (ListView) findViewById(R.id.lstPlayers);
         txtUser     = (EditText) findViewById(R.id.txtUser);
 
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        //LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
         lstPlayers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 target = (String) parent.getItemAtPosition(position);
             }
         });
@@ -68,29 +68,22 @@ public class MainActivity extends ActionBarActivity {
     private Handler handler = new Handler();
     private boolean isBusy = false;
     private boolean stop = false;
-    public void StartHandler()
-    {
-        handler.postDelayed(new Runnable()
-        {
+    public void StartHandler(){
+        handler.postDelayed(new Runnable(){
             @Override
-            public void run()
-            {
+            public void run(){
                 if(!isBusy) CallGetPlayers();
-                if(!stop) StartHandler();            }
-        }, 5000);
+                if(!stop) StartHandler();
+            }
+        }, 3000);
     }
 
-    private void CallGetPlayers()
-    {
+    private void CallGetPlayers(){
         new GetPlayers().execute();
     }
     
     public void FetchButton(View view){
-        playerName = txtUser.getText().toString();
-
-        if(target != "" && playerName != null) {
-            new DoYo().execute(target, lat, lng);
-        }
+        new DoYo().execute(target, DataStorage.Lat, DataStorage.Lng);
     }
 
     private void UpdateList(){
@@ -130,12 +123,12 @@ public class MainActivity extends ActionBarActivity {
                 con.setRequestMethod("POST");
 
                 String urlParameters = "api_token=62baa300-1e7c-4b56-817d-3da885c28369&username=YOGAEMCHECK";
-                urlParameters = urlParameters.concat("&link=");
+                urlParameters = urlParameters.concat("&link=http://www.web.com?");
                 urlParameters = urlParameters.concat(playerName);
                 urlParameters = urlParameters.concat(";");
-                urlParameters = urlParameters.concat(lat);
+                urlParameters = urlParameters.concat(DataStorage.Lat);
                 urlParameters = urlParameters.concat(";");
-                urlParameters = urlParameters.concat(lng);
+                urlParameters = urlParameters.concat(DataStorage.Lng);
                 urlParameters = urlParameters.concat(";");
                 urlParameters = urlParameters.concat(params[0]);
 
@@ -178,8 +171,7 @@ public class MainActivity extends ActionBarActivity {
 
                 con.setDoOutput(true);
 
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(con.getInputStream()));
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
                 String inputLine;
                 StringBuffer response = new StringBuffer();
 
@@ -188,6 +180,12 @@ public class MainActivity extends ActionBarActivity {
                 }
 
                 String result = response.toString();
+
+                if(result.contains(playerName))
+                    result = result.replace(playerName, "");
+
+                if(result.contains(";;"))
+                    result = result.replace(";;", ";");
 
                 if(result != "")
                     players = result.toString().split(";");
@@ -206,15 +204,15 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            UpdateList();
             isBusy = false;
+            UpdateList();
         }
     }
 
     LocationListener locationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
-            lat = String.valueOf(location.getLatitude());
-            lng = String.valueOf(location.getLongitude());
+            DataStorage.Lat = String.valueOf(location.getLatitude());
+            DataStorage.Lng = String.valueOf(location.getLongitude());
         }
 
         public void onStatusChanged(String provider, int status, Bundle extras) {}
