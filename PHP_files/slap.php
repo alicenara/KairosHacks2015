@@ -1,5 +1,8 @@
-<?
+<?php
 	$user = $_GET["username"];
+	$user = explode(';',$user);
+	$count  = $user[1];
+	$user = $user[0];
 ?>
 <html>
 	<head>
@@ -45,7 +48,10 @@
 		</style>
 	</head>
 	<body>
-			<div class="msg"><div class="topMsg"><?=$user?></div></div>
-			<div class="msg"><div class="btmMsg">IS DEAD</div></div>
+			<div class="msg">
+				<div class="topMsg"><?php echo $user ?></div>
+				<div class="topMsg">IS DEAD</div>
+			</div>
+			<div class="msg"><div class="btmMsg"><?php echo $count ?> MORE ALIVE</div></div>
 	</body>
 </html>

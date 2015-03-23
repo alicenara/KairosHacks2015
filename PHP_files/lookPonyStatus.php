@@ -3,7 +3,7 @@
 
     function checkPeople(){
         //get people status
-        mono_query("SELECT * FROM KHGame ORDER BY username",$people_playing,0);
+        mono_query("SELECT * FROM KHGame WHERE active = 1 ORDER BY username",$people_playing,0);
 
         for($i=0;$i<count($people_playing);$i++){
             if($people_playing[$i]['dead']){
